@@ -545,12 +545,65 @@
             .eval-buttons { flex-direction: column; }
             .btn-delete { opacity: 1; }
         }
+
+        /* Üç Çizgi Hamburger Butonu (Varsayılan olarak masaüstünde gizli) */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Mobil Uyum Düzenlemesi */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .menu-toggle { display: block; } /* Mobilde butonu göster */
+            
+            .sidebar {
+                position: fixed;
+                left: -280px; /* Ekranın dışında başlat */
+                top: 0;
+                height: 100%;
+                transition: transform 0.3s ease;
+                z-index: 99;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
+
+            /* Menü açıldığında çalışacak sınıf */
+            .sidebar.open {
+                transform: translateX(280px); 
+            }
+
+            .main-content { 
+                padding: 70px 20px 20px 20px; /* Üstteki buton için pay bırakıldı */
+            }
+            .timer { flex-wrap: wrap; justify-content: center; gap: 12px; }
+            .add-card-area { flex-direction: column; }
+            input[type="text"], textarea, button.btn-primary { width: 100%; }
+            .search-box { max-width: 100%; }
+            .eval-buttons { flex-direction: column; }
+            .btn-delete { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
+    
+    <!-- YENİ: Mobilde aç/kapa yapacak üç çizgi butonu -->
+    <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+
+    <div class="sidebar" id="sidebar">
         <div class="brand">25 EKİM</div>
+        <!-- Menü öğelerin burada kalacak -->
+    
         
         <div class="menu-item active" onclick="showSection('anasayfa', this)">🏠 Anasayfa</div>
         <div class="menu-item" onclick="showSection('ezber-kartlar', this)">🗂️ Ezber Kartlar</div>
@@ -1126,6 +1179,43 @@
                     lastX = current.x; lastY = current.y; lastZ = current.z;
                 }
             });
+        }
+
+        // Hamburger menüyü açıp kapama fonksiyonu
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Mobilde bir menü adına tıklandığında menüyü otomatik kapat
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            resetActiveMenus();
+            document.getElementById(sectionId).classList.add('active');
+            if(element) element.classList.add('active');
+
+            if(sectionId === 'anasayfa') renderDashboard();
+            if(sectionId === 'kavanoz') resetKavanozUI();
+
+            // Mobilde menüyü kapat
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function showLesson(dersAdi, element) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            resetActiveMenus();
+            const detaySection = document.getElementById('ders-detay');
+            detaySection.classList.add('active');
+            if(element) element.classList.add('active');
+            document.getElementById('lessonTitle').innerText = dersAdi;
+            renderKonular(dersAdi);
+
+            // Mobilde menüyü kapat
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
         }
     </script>
 </body>

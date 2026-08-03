@@ -526,19 +526,35 @@
 
         @media (max-width: 768px) {
             body { flex-direction: column; }
+            .menu-toggle { display: block; } /* Butonu görünür yap */
+            
             .sidebar {
-                width: 100%;
-                flex-direction: row;
-                padding: 15px 20px;
-                overflow-x: auto;
-                white-space: nowrap;
-                align-items: center;
+                position: fixed;
+                left: -280px; /* Ekranın dışında gizli başlar */
+                top: 0;
+                width: 280px;
+                height: 100%;
+                flex-direction: column; /* 👈 YAZILARIN ALT ALTA DURMASINI SAĞLAYAN KISIM */
+                align-items: stretch; /* Elemanları tam genişliğe yayar */
+                padding: 32px 20px;
+                transition: transform 0.3s ease;
+                z-index: 99;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
             }
-            .brand { display: none; }
-            .menu-section-title { display: none; }
-            .menu-item { margin-bottom: 0; margin-right: 10px; }
-            .main-content { padding: 20px; }
-            .dashboard-header { flex-direction: column; align-items: flex-start; }
+
+            /* Menü açıldığında çalışacak sınıf */
+            .sidebar.open {
+                transform: translateX(280px); /* Tıklayınca ekrana kayar */
+            }
+
+            .brand { display: block; } /* Mobilde menü açılınca başlık görinsün */
+            .menu-section-title { display: block; } /* Başlıklar görinsün */
+            .menu-item { margin-bottom: 4px; } /* Yan yana boşlukları sıfırlayıp alt alta dizilim sağlar */
+
+            .main-content { 
+                padding: 70px 20px 20px 20px; 
+            }
+            .timer { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .add-card-area { flex-direction: column; }
             input[type="text"], textarea, button.btn-primary { width: 100%; }
             .search-box { max-width: 100%; }
